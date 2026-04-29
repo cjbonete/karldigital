@@ -6,17 +6,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Carl | Digital Graphic Designer</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <!-- DARK MODE -->
+  <script>
+    tailwind.config = {
+      // This tells Tailwind: When you see .light on <html>, 
+      // use the styles prefixed with 'dark:'
+      darkMode: ['class', '.light'],
+      theme: {
+        extend: {
+          colors: {
+            cozyBlack: '#0f0f0f',
+            cozyCard: '#1a1a1a',
+          }
+        }
+      }
+    }
+  </script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
   <style>
+    * {
+      transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+    }
+
+    /* Default State: Dark Mode (Cozy Black) */
     body {
       background-color: #0f0f0f;
       color: #e5e5e5;
+      transition: background-color 0.5s ease, color 0.5s ease;
     }
 
     .cozy-card {
       background: #1a1a1a;
       border: 1px solid #333;
-      transition: transform 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     .cozy-card:hover {
@@ -32,42 +58,106 @@
       background: #262626;
       border: 1px solid #444;
       color: white;
+      transition: all 0.3s ease;
+    }
+
+    /* Light Mode Override (When .light class is present on html) */
+    html.light body {
+      background-color: #ffffff;
+      color: #18181b;
+    }
+
+    html.light .cozy-card {
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+    }
+
+    html.light .cozy-card:hover {
+      border-color: #a1a1aa;
+    }
+
+    html.light .accent-text {
+      color: #52525b;
+    }
+
+    html.light .input-field {
+      background: #ffffff;
+      border: 1px solid #d4d4d8;
+      color: #000000;
+    }
+
+    /* Utilities */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   </style>
+
 </head>
 
 <body class="font-sans antialiased">
+
+  <!-- DARKMODE SWITCH -->
+  <div x-data="{ isLight: localStorage.getItem('theme') === 'light' }" x-init="$watch('isLight', val => {
+                localStorage.setItem('theme', val ? 'light' : 'dark');
+                document.documentElement.classList.toggle('light', val);
+             }); 
+             document.documentElement.classList.toggle('light', isLight)" class="fixed top-6 left-6 z-[100]">
+
+    <button @click="isLight = !isLight"
+      class="p-3 rounded-full transition-all duration-300 shadow-2xl bg-zinc-800 border border-zinc-700">
+      <i x-show="!isLight" class="fas fa-sun text-yellow-400"></i>
+      <i x-show="isLight" class="fas fa-moon text-zinc-900"></i>
+    </button>
+  </div>
+
   <!-- ProfileSec -->
-  <section class="min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20 max-w-7xl mx-auto gap-12 lg:gap-24">
-    
+  <section
+    class="min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-20 max-w-7xl mx-auto gap-12 lg:gap-24">
+
     <div class="w-full md:w-1/2 flex justify-center md:justify-end">
-        <div class="w-72 h-72 sm:w-80 sm:h-80 lg:w-[500px] lg:h-[500px] flex items-center justify-center overflow-hidden group cursor-pointer transition-all duration-500 ease-out">
-            <img src="images/MeWork.png" alt="Carl working"
-                class="w-full h-full object-contain group-hover:scale-105 group-hover:drop-shadow-[0_20px_50px_rgba(255,255,255,0.1)] transition-all duration-500 ease-out" />
-        </div>
+      <div
+        class="w-72 h-72 sm:w-80 sm:h-80 lg:w-[500px] lg:h-[500px] flex items-center justify-center overflow-hidden group cursor-pointer transition-all duration-500 ease-out">
+        <img src="images/MeWork.png" alt="Carl working"
+          class="w-full h-full object-contain group-hover:scale-105 group-hover:drop-shadow-[0_20px_50px_rgba(255,255,255,0.1)] transition-all duration-500 ease-out" />
+      </div>
     </div>
 
     <div class="w-full md:w-1/2 text-center md:text-left">
-        <h1 class="text-5xl lg:text-7xl font-bold mb-6 tracking-tight leading-tight">
-            I am <span class="text-white">Carl</span>
-        </h1>
-        <p class="text-xl lg:text-1xl accent-text max-w-lg md:mx-0 mx-auto leading-relaxed opacity-90">
-            I will help you to transform your imagination into reality through
-            high-impact digital design.
-        </p>
-        <div class="mt-10">
-            <a href="#contact"
-                class="px-10 py-4 bg-white text-black font-bold rounded-full hover:bg-zinc-300 transition-all shadow-lg inline-block">
-                Work with me
-            </a>
-        </div>
-    </div>
+      <h1 class="text-5xl lg:text-7xl font-bold mb-6 tracking-tight leading-tight">
+        I am <span class="text-white dark:text-zinc-900">Carl</span>
+      </h1>
+      <p class="text-xl lg:text-1xl accent-text max-w-lg md:mx-0 mx-auto leading-relaxed opacity-90">
+        I will help you to transform your imagination into reality through
+        high-impact digital design.
+      </p>
+      <!-- <div class="mt-10">
+        <a href="#contact"
+          class="px-10 py-4 bg-white text-black font-bold rounded-full hover:bg-zinc-300 transition-all shadow-lg inline-block">
+          Work with me
+        </a>
+      </div>
+    </div> -->
 
-</section>
+      <div class="mt-10">
+        <a href="#contact" 
+            class="px-10 py-4 font-bold rounded-full transition-all shadow-lg inline-block
+            /* Default (Dark Mode) Styles */
+            bg-white text-black hover:bg-zinc-300 
+            /* Light Mode Styles (Triggered by .light class) */
+            dark:bg-blue-600 dark:text-white dark:hover:bg-blue-700">
+          Work with me
+        </a>
+      </div>
 
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  </section>
 
   <!-- ExpertiseSec-->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <section class="py-24 px-6 bg-[#141414]" x-data="{ expanded: false }">
     <div class="max-w-6xl mx-auto">
       <h2 class="text-3xl font-bold mb-12 text-center">My Expertise</h2>
@@ -157,6 +247,198 @@
     </div>
   </section>
 
+  <!-- Experienceee -->
+  <!-- <section class="py-24 px-6 bg-[#0f0f0f]">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold mb-16 text-center">Career Journey</h2>
+
+        <div class="flex overflow-x-auto pb-10 gap-8 snap-x no-scrollbar">
+            
+            <div class="min-w-[300px] snap-center">
+                <div class="flex items-start">
+                    <div class="flex-1 p-6 rounded-2xl hover:bg-zinc-900/50 transition">
+                        <span class="text-white font-bold text-2xl">Present</span>
+                        <h3 class="text-zinc-500 font-semibold mb-4">Freelance</h3>
+                        <ul class="space-y-2 text-sm text-zinc-400">
+                            <li><i class="fas fa-code mr-2 text-xs text-white"></i> Web Developer | Laravel | React</li>
+                            <li><i class="fas fa-pen-nib mr-2 text-xs text-white"></i> Graphic Design</li>
+                            <li><i class="fas fa-play mr-2 text-xs text-white"></i> Video Editor | Animation</li>
+                        </ul>
+                    </div>
+                    <div class="w-[1px] h-48 bg-gradient-to-b from-zinc-700 to-transparent ml-4 hidden md:block"></div>
+                </div>
+            </div>
+
+            <div class="min-w-[300px] snap-center">
+                <div class="flex items-start">
+                    <div class="flex-1 p-6 rounded-2xl hover:bg-zinc-900/50 transition">
+                        <span class="text-zinc-500 font-bold text-2xl">2025</span>
+                        <h3 class="text-white font-semibold mb-4">Bureau of Internal Revenue</h3>
+                        <p class="text-zinc-400 text-sm font-medium mb-2">System Developer</p>
+                        <p class="text-zinc-500 text-sm leading-relaxed">
+                            Developing enterprise-level automation systems and managing data warehousing operations.
+                        </p>
+                    </div>
+                    <div class="w-[1px] h-48 bg-gradient-to-b from-zinc-700 to-transparent ml-4 hidden md:block"></div>
+                </div>
+            </div>
+
+            <div class="min-w-[300px] snap-center">
+                <div class="flex items-start">
+                    <div class="flex-1 p-6 rounded-2xl hover:bg-zinc-900/50 transition">
+                        <span class="text-zinc-500 font-bold text-2xl">2024</span>
+                        <h3 class="text-white font-semibold mb-4">Tech Solutions Inc.</h3>
+                        <p class="text-zinc-400 text-sm font-medium mb-2">IT Staff / Developer</p>
+                        <p class="text-zinc-500 text-sm leading-relaxed">
+                            Enterprise-level technical support, hardware assembly, and system troubleshooting.
+                        </p>
+                    </div>
+                    <div class="w-[1px] h-48 bg-gradient-to-b from-zinc-700 to-transparent ml-4 hidden md:block"></div>
+                </div>
+            </div>
+
+            <div class="min-w-[300px] snap-center">
+                <div class="flex items-start">
+                    <div class="flex-1 p-6 rounded-2xl hover:bg-zinc-900/50 transition">
+                        <span class="text-zinc-500 font-bold text-2xl">2023</span>
+                        <h3 class="text-white font-semibold mb-4">Digital Systems Co.</h3>
+                        <p class="text-zinc-400 text-sm font-medium mb-2">Junior Developer</p>
+                        <p class="text-zinc-500 text-sm leading-relaxed">
+                            Core focus on web development, database management, and SQL optimization.
+                        </p>
+                    </div>
+                    <div class="w-[1px] h-48 bg-gradient-to-b from-zinc-700 to-transparent ml-4 hidden md:block"></div>
+                </div>
+            </div>
+
+            <div class="min-w-[300px] snap-center">
+                <div class="flex items-start">
+                    <div class="flex-1 p-6 rounded-2xl hover:bg-zinc-900/50 transition">
+                        <span class="text-zinc-500 font-bold text-2xl">2022</span>
+                        <h3 class="text-white font-semibold mb-4">StartUp Hub</h3>
+                        <p class="text-zinc-400 text-sm font-medium mb-2">Technical Assistant</p>
+                        <p class="text-zinc-500 text-sm leading-relaxed">
+                            Assisting in UI/UX design components and frontend maintenance.
+                        </p>
+                    </div>
+                    <div class="w-[1px] h-48 bg-gradient-to-b from-zinc-700 to-transparent ml-4 hidden md:block"></div>
+                </div>
+            </div>
+
+            <div class="min-w-[300px] snap-center">
+                <div class="flex items-start">
+                    <div class="flex-1 p-6 rounded-2xl hover:bg-zinc-900/50 transition">
+                        <span class="text-zinc-500 font-bold text-2xl">2021</span>
+                        <h3 class="text-white font-semibold mb-4">Creative Studio</h3>
+                        <p class="text-zinc-400 text-sm font-medium mb-2">Graphic Designer</p>
+                        <p class="text-zinc-500 text-sm leading-relaxed">
+                            Crafting promotional posters and social media assets for local businesses.
+                        </p>
+                    </div>
+                    <div class="w-[1px] h-48 bg-gradient-to-b from-zinc-700 to-transparent ml-4 hidden md:block"></div>
+                </div>
+            </div>
+
+            <div class="min-w-[300px] snap-center">
+                <div class="flex items-start">
+                    <div class="flex-1 p-6 rounded-2xl hover:bg-zinc-900/50 transition">
+                        <span class="text-zinc-500 font-bold text-2xl">2020</span>
+                        <h3 class="text-white font-semibold mb-4">Freelance Launch</h3>
+                        <p class="text-zinc-400 text-sm font-medium mb-2">Junior Graphic Artist</p>
+                        <p class="text-zinc-500 text-sm leading-relaxed">
+                            Started journey in digital design and video editing during university.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <p class="text-center text-zinc-600 text-xs mt-4 hidden md:block tracking-widest uppercase">Swipe to navigate history</p>
+    </div>
+</section> -->
+  <section class="h-screen overflow-y-auto snap-y snap-mandatory no-scrollbar bg-[#0f0f0f]">
+
+   
+
+    <div class="h-screen w-full flex flex-col justify-center items-center snap-start px-6">
+      <div class="text-center">
+        
+         <h2 class="text-3xl font-bold mb-12 text-center">Experience for the Last 5 Years</h2>
+
+        <span class="text-white font-bold text-6xl md:text-8xl opacity-20 block mb-4">2026</span>
+        <h3 class="text-4xl font-bold text-white mb-4">Present Day</h3>
+        <p class="text-zinc-400 text-lg max-w-md mx-auto">Freelance Web Developer | AI Automate | Digital Artist</p>
+        <div class="w-[2px] h-24 bg-gradient-to-b from-white to-transparent mx-auto mt-8"></div>
+      </div>
+    </div>
+
+    <div class="h-screen w-full flex flex-col justify-center items-center snap-start px-6">
+      <div class="text-center">
+        <span class="text-zinc-800 font-bold text-6xl md:text-8xl block mb-4">2025</span>
+        <h3 class="text-4xl font-bold text-white mb-4">Project Manager</h3>
+        <p class="text-zinc-400 text-lg max-w-md mx-auto">Manage Systems and Staff | Analyzing Business Needs and Daily Task for the Whole Month</p>
+        <div class="w-[2px] h-24 bg-zinc-800 mx-auto mt-8"></div>
+      </div>
+    </div>
+
+    <div class="h-screen w-full flex flex-col justify-center items-center snap-start px-6">
+      <div class="text-center">
+        <span class="text-zinc-800 font-bold text-6xl md:text-8xl block mb-4">2024</span>
+        <h3 class="text-4xl font-bold text-white mb-4">System Developer | Business Analyst</h3>
+        <p class="text-zinc-400 text-lg max-w-md mx-auto">Created Various Systems and Website Full Stack for the Clients Digitalization of Work</p>
+        <div class="w-[2px] h-24 bg-zinc-800 mx-auto mt-8"></div>
+      </div>
+    </div>
+
+    <div class="h-screen w-full flex flex-col justify-center items-center snap-start px-6">
+      <div class="text-center">
+        <span class="text-zinc-800 font-bold text-6xl md:text-8xl block mb-4">2023</span>
+        <h3 class="text-4xl font-bold text-white mb-4">Junior Developer</h3>
+        <p class="text-zinc-400 text-lg max-w-md mx-auto">Developed System and Consistent Maintainance Creating a Secured System Workflow</p>
+        <div class="w-[2px] h-24 bg-zinc-800 mx-auto mt-8"></div>
+      </div>
+    </div>
+
+    <div class="h-screen w-full flex flex-col justify-center items-center snap-start px-6">
+      <div class="text-center">
+        <span class="text-zinc-800 font-bold text-6xl md:text-8xl block mb-4">2022</span>
+        <h3 class="text-4xl font-bold text-white mb-4">Technical Staff</h3>
+        <p class="text-zinc-400 text-lg max-w-md mx-auto">Troubleshooting Tech Support</p>
+        <div class="w-[2px] h-24 bg-zinc-800 mx-auto mt-8"></div>
+      </div>
+    </div>
+
+    <div class="h-screen w-full flex flex-col justify-center items-center snap-start px-6">
+      <div class="text-center">
+        <span class="text-zinc-800 font-bold text-6xl md:text-8xl block mb-4">2021</span>
+        <h3 class="text-4xl font-bold text-white mb-4">Graphic Designer</h3>
+        <p class="text-zinc-400 text-lg max-w-md mx-auto">Created various Graphical Design for Each Clients, Digital Marketing for Sales Engagement</p>
+        <div class="w-[2px] h-24 bg-zinc-800 mx-auto mt-8"></div>
+      </div>
+    </div>
+
+    <div class="h-screen w-full flex flex-col justify-center items-center snap-start px-6">
+      <div class="text-center">
+        <span class="text-zinc-800 font-bold text-6xl md:text-8xl block mb-4">2020</span>
+        <h3 class="text-4xl font-bold text-white mb-4">The Beginning</h3>
+        <p class="text-zinc-400 text-lg max-w-md mx-auto">University Days & Freelance Launch</p>
+      </div>
+    </div>
+
+  </section>
+
+  <style>
+    /* Hides scrollbar but keeps functionality */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+
   <!-- ToolsSec -->
   <section class="py-24 px-6">
     <div class="max-w-4xl mx-auto text-center">
@@ -207,6 +489,21 @@
       </div>
     </div>
   </section>
+
+
+
+  <style>
+    /* Hides scrollbar but keeps functionality */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+
 
   <!-- ContactSec -->
   <section id="contact" class="py-24 px-6 bg-[#141414]">
